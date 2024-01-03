@@ -38,14 +38,18 @@ function App() {
       {[1, 2, 3, 4, 5, 6, 7, 8].map((e, i) => {
         return [1, 2, 3, 4, 5, 6, 7, 8].map((f, j) => {
           let squareColor = "blue";
-          for (let k = 0; k < map.ships[2].parts.length; k++) {
-            if (
-              map.ships[2].parts[k].position[0] === i &&
-              map.ships[2].parts[k].position[1] === j
-            ) {
-              squareColor = "green";
+          for (let h = 0; h < map.ships.length; h++) {
+            for (let k = 0; k < map.ships[h].parts.length; k++) {
+              console.log(map.ships[h].parts[k]);
+              if (
+                map.ships[h].parts[k].position[0] === i &&
+                map.ships[h].parts[k].position[1] === j
+              ) {
+                squareColor = "green";
+              }
             }
           }
+
           return (
             <div
               key={f}
