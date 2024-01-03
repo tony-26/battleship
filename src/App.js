@@ -1,23 +1,122 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Ship from "./lib/Ship";
+import ShipPart from "./lib/ShipPart";
+import Map from "./lib/Map";
+import { useState } from "react";
 
+const map1 = new Map({
+  length: 8,
+  width: 8,
+  ships: [
+    new Ship({
+      parts: [
+        new ShipPart({ position: [1, 1] }),
+        new ShipPart({ position: [1, 2] }),
+        new ShipPart({ position: [1, 3] }),
+      ],
+    }),
+    new Ship({
+      parts: [
+        new ShipPart({ position: [4, 4] }),
+        new ShipPart({ position: [4, 5] }),
+      ],
+    }),
+    new Ship({
+      parts: [
+        new ShipPart({ position: [7, 6] }),
+        new ShipPart({ position: [6, 6] }),
+        new ShipPart({ position: [5, 6] }),
+        new ShipPart({ position: [4, 6] }),
+      ],
+    }),
+  ],
+});
 function App() {
+  const [map, setMap] = useState(map1);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ height: "640px", width: "640px", backgroundColor: "grey" }}>
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((e, i) => {
+        return [1, 2, 3, 4, 5, 6, 7, 8].map((f, j) => {
+          let squareColor = "blue";
+          for (let k = 0; k < map.ships[2].parts.length; k++) {
+            if (
+              map.ships[2].parts[k].position[0] === i &&
+              map.ships[2].parts[k].position[1] === j
+            ) {
+              squareColor = "green";
+            }
+          }
+          return (
+            <div
+              key={f}
+              style={{
+                height: "75px",
+                width: "75px",
+                backgroundColor: squareColor,
+                border: "2px solid red",
+                display: "inline-block",
+                color: "white",
+              }}
+            >
+              {i},{j}
+            </div>
+          );
+        });
+      })}
+
+      {/* {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              height: "75px",
+              width: "75px",
+              backgroundColor: "blue",
+              border: "2px solid red",
+              display: "inline-block",
+              color: "white",
+            }}
+          >
+            (1, {i})
+          </div>
+        );
+      })}
+
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              height: "75px",
+              width: "75px",
+              backgroundColor: "blue",
+              border: "2px solid red",
+              display: "inline-block",
+              color: "white",
+            }}
+          >
+            (2, {i})
+          </div>
+        );
+      })}
+
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              height: "75px",
+              width: "75px",
+              backgroundColor: "blue",
+              border: "2px solid red",
+              display: "inline-block",
+              color: "white",
+            }}
+          >
+            (3, {i})
+          </div>
+        );
+      })} */}
     </div>
   );
 }
