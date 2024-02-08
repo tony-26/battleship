@@ -10,5 +10,14 @@ class Map {
       this.ships[i].attackAt(coords);
     }
   }
+  checkForShipPart(x, y) {
+    for (let i = 0; i < this.ships.length; i++) {
+      const ship = this.ships[i];
+      if (ship.hasPartAt(x, y)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 export default Map;

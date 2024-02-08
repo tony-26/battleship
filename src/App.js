@@ -3,6 +3,7 @@ import Ship from "./lib/Ship";
 import ShipPart from "./lib/ShipPart";
 import Map from "./lib/Map";
 import { useState } from "react";
+import getMapInfor from "./lib/getMapInfor";
 
 const map1 = new Map({
   length: 8,
@@ -31,27 +32,52 @@ const map1 = new Map({
     }),
   ],
 });
+
 function App() {
-  const [map, setMap] = useState(map1);
+  const [mapInfor, setMapInfor] = useState(getMapInfor(map1));
+  const [clickCount, setClickCount] = useState(0);
+  const [allShipsHit, setAllShipsHit] = useState(false);
+
+  let totalShipParts = 0;
+  for (let i = 0; i < map1.ships.length; i++) {
+    totalShipParts += map1.ships[i].parts.length;
+  }
+
+  const hitHandler = (e, f) => {
+    const key = `${e}_${f}`;
+    const isShipPart = map1.checkForShipPart(e, f);
+    let newColor;
+    if (isShipPart) {
+      newColor = "yellow";
+      const hitCount =
+        Object.values(mapInfor).filter((color) => color === "yellow").length +
+        1;
+      if (hitCount === totalShipParts) {
+        setAllShipsHit(true); 
+      }
+    } else {
+      newColor = "red";
+    }
+
+    setMapInfor((prevMapInfor) => ({
+      ...prevMapInfor,
+      [key]: newColor,
+    }));
+
+    setClickCount(clickCount + 1);
+  };
+
   return (
     <div style={{ height: "640px", width: "640px", backgroundColor: "grey" }}>
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((e, i) => {
-        return [1, 2, 3, 4, 5, 6, 7, 8].map((f, j) => {
-          let squareColor = "blue";
-          for (let h = 0; h < map.ships.length; h++) {
-            for (let k = 0; k < map.ships[h].parts.length; k++) {
-              console.log(map.ships[h].parts[k]);
-              if (
-                map.ships[h].parts[k].position[0] === i &&
-                map.ships[h].parts[k].position[1] === j
-              ) {
-                squareColor = "green";
-              }
-            }
-          }
-
+      {allShipsHit && (
+        <h2>You have hit all the ships, you sent {clickCount} missiles</h2>
+      )}
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((e) => {
+        return [1, 2, 3, 4, 5, 6, 7, 8].map((f) => {
+          const key = `${e}_${f}`;
+          let squareColor = mapInfor[key] ? mapInfor[key] : "blue";
           return (
-            <div
+            <button
               key={f}
               style={{
                 height: "75px",
@@ -61,66 +87,13 @@ function App() {
                 display: "inline-block",
                 color: "white",
               }}
+              onClick={() => hitHandler(e, f)}
             >
-              {i},{j}
-            </div>
+              {e},{f}
+            </button>
           );
         });
       })}
-
-      {/* {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
-        return (
-          <div
-            key={i}
-            style={{
-              height: "75px",
-              width: "75px",
-              backgroundColor: "blue",
-              border: "2px solid red",
-              display: "inline-block",
-              color: "white",
-            }}
-          >
-            (1, {i})
-          </div>
-        );
-      })}
-
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
-        return (
-          <div
-            key={i}
-            style={{
-              height: "75px",
-              width: "75px",
-              backgroundColor: "blue",
-              border: "2px solid red",
-              display: "inline-block",
-              color: "white",
-            }}
-          >
-            (2, {i})
-          </div>
-        );
-      })}
-
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
-        return (
-          <div
-            key={i}
-            style={{
-              height: "75px",
-              width: "75px",
-              backgroundColor: "blue",
-              border: "2px solid red",
-              display: "inline-block",
-              color: "white",
-            }}
-          >
-            (3, {i})
-          </div>
-        );
-      })} */}
     </div>
   );
 }
